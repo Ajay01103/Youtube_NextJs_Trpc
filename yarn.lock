@@ -12,6 +12,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.12.5":
+  version: 7.26.7
+  resolution: "@babel/runtime@npm:7.26.7"
+  dependencies:
+    regenerator-runtime: "npm:^0.14.0"
+  checksum: 10/c7a661a6836b332d9d2e047cba77ba1862c1e4f78cec7146db45808182ef7636d8a7170be9797e5d8fd513180bffb9fa16f6ca1c69341891efec56113cf22bfc
+  languageName: node
+  linkType: hard
+
 "@clerk/backend@npm:^1.23.11":
   version: 1.23.11
   resolution: "@clerk/backend@npm:1.23.11"
@@ -1444,6 +1453,57 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-core@npm:5.66.0":
+  version: 5.66.0
+  resolution: "@tanstack/query-core@npm:5.66.0"
+  checksum: 10/ba8623c0272e36d3ce616afa024d43e07e6b69170219b32eb4f60156fee9ac4ffa74d2fbb999739b6dea757b75966e76129271f4224f06c59deee24a72944da4
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:^5.66.0":
+  version: 5.66.0
+  resolution: "@tanstack/react-query@npm:5.66.0"
+  dependencies:
+    "@tanstack/query-core": "npm:5.66.0"
+  peerDependencies:
+    react: ^18 || ^19
+  checksum: 10/482decc02664e756c66c9ff46279b5eb3f0fb29fcdcb51b96319e8487a2b2e8b151319d6a5d9ef1180523a1792d6449cec2e9bfa87f37a4f755fc9d95534585d
+  languageName: node
+  linkType: hard
+
+"@trpc/client@npm:^11.0.0-rc.750":
+  version: 11.0.0-rc.750
+  resolution: "@trpc/client@npm:11.0.0-rc.750"
+  peerDependencies:
+    "@trpc/server": 11.0.0-rc.750+3ade8efd4
+    typescript: ">=5.7.2"
+  checksum: 10/f408c8e6f8831f6a50044d21d5b71cb9056a036c220de21ae3daab7a9cb1f33c5a38d0e4c3af16fcfe2ac47e7f8a9cec75fcdcbe3ed656fb7cfea75628c36188
+  languageName: node
+  linkType: hard
+
+"@trpc/react-query@npm:^11.0.0-rc.750":
+  version: 11.0.0-rc.750
+  resolution: "@trpc/react-query@npm:11.0.0-rc.750"
+  peerDependencies:
+    "@tanstack/react-query": ^5.62.8
+    "@trpc/client": 11.0.0-rc.750+3ade8efd4
+    "@trpc/server": 11.0.0-rc.750+3ade8efd4
+    react: ">=18.2.0"
+    react-dom: ">=18.2.0"
+    typescript: ">=5.7.2"
+  checksum: 10/e634c3953e137bbb7fe30ab5701779d0111e870cb080e32e5679dbefc7af1a9620bf71a51e521f96a17f20d4ef20ff8517482299eec80db28c8bd86ddc9de530
+  languageName: node
+  linkType: hard
+
+"@trpc/server@npm:^11.0.0-rc.750":
+  version: 11.0.0-rc.750
+  resolution: "@trpc/server@npm:11.0.0-rc.750"
+  peerDependencies:
+    typescript: ">=5.7.2"
+  checksum: 10/b2faefd4a105788014a6881befc119b16b2b2b838e749552c69b739ef52c9bb43c2e6a457444cf1e054715c28365e1c3a545e7134d6a5e9729338689340fc65b
+  languageName: node
+  linkType: hard
+
 "@types/estree@npm:^1.0.6":
   version: 1.0.6
   resolution: "@types/estree@npm:1.0.6"
@@ -1621,6 +1681,35 @@ __metadata:
     "@typescript-eslint/types": "npm:8.23.0"
     eslint-visitor-keys: "npm:^4.2.0"
   checksum: 10/fd473849b85e564e31aec64feb3417a4e16e48bf21f1959fbab56258e19c21ef47bbdb523c64a8921cdc82a5083735418890b6f74b564fd1ece305c977a0f7a6
+  languageName: node
+  linkType: hard
+
+"@upstash/core-analytics@npm:^0.0.10":
+  version: 0.0.10
+  resolution: "@upstash/core-analytics@npm:0.0.10"
+  dependencies:
+    "@upstash/redis": "npm:^1.28.3"
+  checksum: 10/945ed44fa02915a37a2ceaa254f38b3e1b305daede520164b8887681bb1bfbe722f4b90b41c6ca5a87f50b9a22bfe48367f7b5ff9b2a8feb1b467ab803663354
+  languageName: node
+  linkType: hard
+
+"@upstash/ratelimit@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "@upstash/ratelimit@npm:2.0.5"
+  dependencies:
+    "@upstash/core-analytics": "npm:^0.0.10"
+  peerDependencies:
+    "@upstash/redis": ^1.34.3
+  checksum: 10/b3f50b73201da66af555a45c25df2d2bed9890b507dfdc96b5792f7513a688c8ccfedcdfc7a699b685124d5f1321715006353a3ec72900cca364c0698ed60ba6
+  languageName: node
+  linkType: hard
+
+"@upstash/redis@npm:^1.28.3, @upstash/redis@npm:^1.34.4":
+  version: 1.34.4
+  resolution: "@upstash/redis@npm:1.34.4"
+  dependencies:
+    crypto-js: "npm:^4.2.0"
+  checksum: 10/20ace4e0ac9f6703da67e6bd324980a49a33d7312205ca37ecfef961482e74848171af1c22a6e39e73bcdab83c8f435458562c605d57abaee4add3ee66ccd4c4
   languageName: node
   linkType: hard
 
@@ -2062,7 +2151,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"client-only@npm:0.0.1":
+"client-only@npm:0.0.1, client-only@npm:^0.0.1":
   version: 0.0.1
   resolution: "client-only@npm:0.0.1"
   checksum: 10/0c16bf660dadb90610553c1d8946a7fdfb81d624adea073b8440b7d795d5b5b08beb3c950c6a2cf16279365a3265158a236876d92bce16423c485c322d7dfaf8
@@ -2162,6 +2251,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"copy-anything@npm:^3.0.2":
+  version: 3.0.5
+  resolution: "copy-anything@npm:3.0.5"
+  dependencies:
+    is-what: "npm:^4.1.8"
+  checksum: 10/4c41385a94a1cff6352a954f9b1c05b6bb1b70713a2d31f4c7b188ae7187ce00ddcc9c09bd58d24cd35b67fc6dd84df5954c0be86ea10700ff74e677db3cb09c
+  languageName: node
+  linkType: hard
+
 "cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.6":
   version: 7.0.6
   resolution: "cross-spawn@npm:7.0.6"
@@ -2173,7 +2271,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"crypto-js@npm:4.2.0":
+"crypto-js@npm:4.2.0, crypto-js@npm:^4.2.0":
   version: 4.2.0
   resolution: "crypto-js@npm:4.2.0"
   checksum: 10/c7bcc56a6e01c3c397e95aa4a74e4241321f04677f9a618a8f48a63b5781617248afb9adb0629824792e7ec20ca0d4241a49b6b2938ae6f973ec4efc5c53c924
@@ -2478,6 +2576,34 @@ __metadata:
   version: 0.2.0
   resolution: "eastasianwidth@npm:0.2.0"
   checksum: 10/9b1d3e1baefeaf7d70799db8774149cef33b97183a6addceeba0cf6b85ba23ee2686f302f14482006df32df75d32b17c509c143a3689627929e4a8efaf483952
+  languageName: node
+  linkType: hard
+
+"embla-carousel-react@npm:^8.5.2":
+  version: 8.5.2
+  resolution: "embla-carousel-react@npm:8.5.2"
+  dependencies:
+    embla-carousel: "npm:8.5.2"
+    embla-carousel-reactive-utils: "npm:8.5.2"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.1 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+  checksum: 10/7390154357ffad9eb4641d5d5cd7ed061d33dfaa02c7cfb1b8828e562fe0b7dfb1a0590108db832179a9c4453184b63926d4d4403ba576e8ea6710bad9fd13f0
+  languageName: node
+  linkType: hard
+
+"embla-carousel-reactive-utils@npm:8.5.2":
+  version: 8.5.2
+  resolution: "embla-carousel-reactive-utils@npm:8.5.2"
+  peerDependencies:
+    embla-carousel: 8.5.2
+  checksum: 10/b46011e7031af6642673a7ded7139559ea8af12bf61a6e9aab1ae8006cabafce78ad0c7a3e1c425e96a0fa22de02849fd6d07e86bc118da26cf84eaedccd8a6f
+  languageName: node
+  linkType: hard
+
+"embla-carousel@npm:8.5.2":
+  version: 8.5.2
+  resolution: "embla-carousel@npm:8.5.2"
+  checksum: 10/ed1407d38b86523d4d5abd88ab47804f08e194fb0da0b4b225013ca217d5bb9c40c0899e31261ba2b1748101ae9ccb02a3eaf08d509080f85c9229223f8f8ff3
   languageName: node
   linkType: hard
 
@@ -3860,6 +3986,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-what@npm:^4.1.8":
+  version: 4.1.16
+  resolution: "is-what@npm:4.1.16"
+  checksum: 10/f6400634bae77be6903365dc53817292e1c4d8db1b467515d0c842505b8388ee8e558326d5e6952cb2a9d74116eca2af0c6adb8aa7e9d5c845a130ce9328bf13
+  languageName: node
+  linkType: hard
+
 "isarray@npm:^2.0.5":
   version: 2.0.5
   resolution: "isarray@npm:2.0.5"
@@ -4885,6 +5018,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-error-boundary@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "react-error-boundary@npm:5.0.0"
+  dependencies:
+    "@babel/runtime": "npm:^7.12.5"
+  peerDependencies:
+    react: ">=16.13.1"
+  checksum: 10/8b68de3441bd3d50a2c8433f9c921ff02c691e920e268972ae002087b5080e38435c6f9b2198241683b7f4c6a6ed2f53bf593b83c42946f14daa00322b3c2909
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^16.13.1":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
@@ -4981,6 +5125,13 @@ __metadata:
     get-proto: "npm:^1.0.1"
     which-builtin-type: "npm:^1.2.1"
   checksum: 10/80a4e2be716f4fe46a89a08ccad0863b47e8ce0f49616cab2d65dab0fbd53c6fdba0f52935fd41d37a2e4e22355c272004f920d63070de849f66eea7aeb4a081
+  languageName: node
+  linkType: hard
+
+"regenerator-runtime@npm:^0.14.0":
+  version: 0.14.1
+  resolution: "regenerator-runtime@npm:0.14.1"
+  checksum: 10/5db3161abb311eef8c45bcf6565f4f378f785900ed3945acf740a9888c792f75b98ecb77f0775f3bf95502ff423529d23e94f41d80c8256e8fa05ed4b07cf471
   languageName: node
   linkType: hard
 
@@ -5187,7 +5338,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"server-only@npm:0.0.1":
+"server-only@npm:0.0.1, server-only@npm:^0.0.1":
   version: 0.0.1
   resolution: "server-only@npm:0.0.1"
   checksum: 10/c432348956641ea3f460af8dc3765f3a1bdbcf7a1e0205b0756d868e6e6fe8934cdee6bff68401a1dd49ba4a831c75916517a877446d54b334f7de36fa273e53
@@ -5662,6 +5813,15 @@ __metadata:
     sucrase: bin/sucrase
     sucrase-node: bin/sucrase-node
   checksum: 10/bc601558a62826f1c32287d4fdfa4f2c09fe0fec4c4d39d0e257fd9116d7d6227a18309721d4185ec84c9dc1af0d5ec0e05a42a337fbb74fc293e068549aacbe
+  languageName: node
+  linkType: hard
+
+"superjson@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "superjson@npm:2.2.2"
+  dependencies:
+    copy-anything: "npm:^3.0.2"
+  checksum: 10/6fdc709db4f69d586a18379948e0ade8268c851c791701fea960e29cea12672d7561b4ca89c4049c2e787eb1cec08a51df51d357aa6852078bc0d71d7e17b401
   languageName: node
   linkType: hard
 
@@ -6285,15 +6445,23 @@ __metadata:
     "@radix-ui/react-separator": "npm:^1.1.2"
     "@radix-ui/react-slot": "npm:^1.1.2"
     "@radix-ui/react-tooltip": "npm:^1.1.8"
+    "@tanstack/react-query": "npm:^5.66.0"
+    "@trpc/client": "npm:^11.0.0-rc.750"
+    "@trpc/react-query": "npm:^11.0.0-rc.750"
+    "@trpc/server": "npm:^11.0.0-rc.750"
     "@types/node": "npm:^20"
     "@types/react": "npm:^19"
     "@types/react-dom": "npm:^19"
+    "@upstash/ratelimit": "npm:^2.0.5"
+    "@upstash/redis": "npm:^1.34.4"
     class-variance-authority: "npm:^0.7.1"
+    client-only: "npm:^0.0.1"
     clsx: "npm:^2.1.1"
     concurrently: "npm:^9.1.2"
     dotenv: "npm:^16.4.7"
     drizzle-kit: "npm:^0.30.4"
     drizzle-orm: "npm:^0.39.2"
+    embla-carousel-react: "npm:^8.5.2"
     eslint: "npm:^9"
     eslint-config-next: "npm:15.1.6"
     lucide-react: "npm:^0.475.0"
@@ -6301,10 +6469,21 @@ __metadata:
     postcss: "npm:^8"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
+    react-error-boundary: "npm:^5.0.0"
+    server-only: "npm:^0.0.1"
+    superjson: "npm:^2.2.2"
     svix: "npm:^1.45.1"
     tailwind-merge: "npm:^3.0.1"
     tailwindcss: "npm:^3.4.1"
     tailwindcss-animate: "npm:^1.0.7"
     typescript: "npm:^5"
+    zod: "npm:^3.24.1"
   languageName: unknown
   linkType: soft
+
+"zod@npm:^3.24.1":
+  version: 3.24.1
+  resolution: "zod@npm:3.24.1"
+  checksum: 10/54e25956495dec22acb9399c168c6ba657ff279801a7fcd0530c414d867f1dcca279335e160af9b138dd70c332e17d548be4bc4d2f7eaf627dead50d914fec27
+  languageName: node
+  linkType: hard

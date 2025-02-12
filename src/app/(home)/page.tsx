@@ -1,5 +1,22 @@
-import Image from "next/image"
+import { HomeView } from "@/modules/home/ui/views/home-view"
+import { HydrateClient, trpc } from "@/trpc/server"
 
-export default function Home() {
-  return <div>Will load the videos later</div>
+// necessary to add dynamic otherwise build error happens
+export const dynamic = "force-dynamic"
+
+interface PageProps {
+  searchParams: Promise<{ categoryId?: string }>
 }
+
+const Home = async ({ searchParams }: PageProps) => {
+  const { categoryId } = await searchParams
+  void trpc.categories.getMany.prefetch()
+
+  return (
+    <HydrateClient>
+      <HomeView categoryId={categoryId} />
+    </HydrateClient>
+  )
+}
+
+export default Home
