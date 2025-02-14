@@ -15,6 +15,27 @@
       "when": 1739268355086,
       "tag": "0001_aromatic_silver_centurion",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1739441907438,
+      "tag": "0002_plain_payback",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1739442846272,
+      "tag": "0003_lean_agent_brand",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1739537858135,
+      "tag": "0004_boring_starbolt",
+      "breakpoints": true
     }
   ]
 }
