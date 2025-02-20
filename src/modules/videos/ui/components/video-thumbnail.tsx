@@ -20,6 +20,7 @@ export const VideoThumbnail = ({ imageUrl, previewUrl, duration }: Props) => {
         onMouseLeave={() => setIsHovering(false)}
       >
         <Image
+          unoptimized={!!previewUrl}
           src={isHovering && previewUrl ? previewUrl : imageUrl ?? "/placeholder.svg"}
           alt="thumb"
           fill
