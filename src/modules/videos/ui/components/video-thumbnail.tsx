@@ -1,4 +1,5 @@
 import { formatDuration } from "@/lib/utils"
+import { THUMBNAIL_FALLBACK } from "@/modules/constants"
 import Image from "next/image"
 import { useState } from "react"
 
@@ -21,7 +22,7 @@ export const VideoThumbnail = ({ imageUrl, previewUrl, duration }: Props) => {
       >
         <Image
           unoptimized={!!previewUrl}
-          src={isHovering && previewUrl ? previewUrl : imageUrl ?? "/placeholder.svg"}
+          src={isHovering && previewUrl ? previewUrl : imageUrl ?? THUMBNAIL_FALLBACK}
           alt="thumb"
           fill
           className="size-full object-cover"

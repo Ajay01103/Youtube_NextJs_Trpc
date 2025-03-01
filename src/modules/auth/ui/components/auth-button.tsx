@@ -12,7 +12,7 @@ export const AuthButton = () => {
   return (
     <>
       <SignedIn>
-        {pathname !== "/studio" && (
+        {!pathname.startsWith("/studio") && (
           <Link
             href="/studio"
             className={buttonVariants({
