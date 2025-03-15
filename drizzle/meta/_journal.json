@@ -64,6 +64,13 @@
       "when": 1739877837794,
       "tag": "0008_grey_madelyne_pryor",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1740826811307,
+      "tag": "0009_gifted_lady_mastermind",
+      "breakpoints": true
     }
   ]
 }
