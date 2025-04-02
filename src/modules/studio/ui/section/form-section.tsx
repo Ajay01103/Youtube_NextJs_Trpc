@@ -33,6 +33,7 @@ import {
   Copy,
   Globe2,
   ImagePlus,
+  Loader2,
   Lock,
   MoreVertical,
   RotateCcw,
@@ -47,6 +48,8 @@ import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { THUMBNAIL_FALLBACK } from "@/modules/constants"
 import { ThumbnailUploadModal } from "../components/thumbnail-upload-modal"
+import { ThumbnailGenerateModal } from "@/components/thumbnail-generate-modal"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface Props {
   videoId: string
@@ -63,13 +66,76 @@ export const FormSection = ({ videoId }: Props) => {
 }
 
 const FormSectionSkeleton = () => {
-  return <p>Loading...</p>
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <div className="space-y-2">
+          <Skeleton className="h-7 w-32" />
+          <Skeleton className="h-4 w-40" />
+        </div>
+        <Skeleton className="h-9 w-24" />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <div className="space-y-8 lg:col-span-3">
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-16" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-24" />
+            <Skeleton className="h-[220px] w-full" />
+          </div>
+
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-20" />
+            <Skeleton className="h-[84px] w-[153px]" />
+          </div>
+
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-20" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-y-8 lg:col-span-2">
+          <div className="flex flex-col gap-4 bg-[#F9F9F9] rounded-xl overflow-hidden">
+            <Skeleton className="aspect-video" />
+
+            <div className="px-4 py-4 space-y-6">
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-5 w-full" />
+              </div>
+
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-5 w-32" />
+              </div>
+
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-5 w-32" />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-20" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export const FormSectionSuspense = ({ videoId }: Props) => {
   const router = useRouter()
   const [isCopied, setIsCopied] = useState(false)
   const [thumbnailModalOpen, setThumbnailModalopen] = useState(false)
+  const [thumbnailGenerateModelOpen, setThumbnailGenerateModelOpen] = useState(false)
 
   const utils = trpc.useUtils()
   const [video] = trpc.studio.getOne.useSuspenseQuery({ id: videoId })
@@ -110,10 +176,21 @@ export const FormSectionSuspense = ({ videoId }: Props) => {
     },
   })
 
-  const generateThumbnail = trpc.videos.generateThumbnail.useMutation({
+  const generateTitle = trpc.videos.generateTitle.useMutation({
     onSuccess: () => {
       toast.success("Background job started", {
         description: "It may take some time",
+      })
+    },
+    onError: () => {
+      toast.error("Something went wrong")
+    },
+  })
+
+  const generateDescription = trpc.videos.generateDescription.useMutation({
+    onSuccess: () => {
+      toast.success("Background job started", {
+        description: "This may take a few minutes",
       })
     },
     onError: () => {
@@ -147,6 +224,11 @@ export const FormSectionSuspense = ({ videoId }: Props) => {
       <ThumbnailUploadModal
         open={thumbnailModalOpen}
         onOpenChnage={setThumbnailModalopen}
+        videoId={videoId}
+      />
+      <ThumbnailGenerateModal
+        open={thumbnailGenerateModelOpen}
+        onOpenChange={setThumbnailGenerateModelOpen}
         videoId={videoId}
       />
       <Form {...form}>
@@ -193,12 +275,64 @@ export const FormSectionSuspense = ({ videoId }: Props) => {
                 render={({ field }) => (
                   <FormItem>
                     {/* Add Ai Generated Title */}
-                    <FormLabel>Title</FormLabel>
+                    <div className="flex items-center gap-x-2">
+                      <FormLabel>Title</FormLabel>
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        type="button"
+                        className="rounded-full size-6 [&_svg]:size-3"
+                        onClick={() => generateTitle.mutate({ id: videoId })}
+                        disabled={generateTitle.isPending || !video.muxTrackId}
+                      >
+                        {generateTitle.isPending ? (
+                          <Loader2 className="animate-spin" />
+                        ) : (
+                          <Sparkles />
+                        )}
+                      </Button>
+                    </div>
 
                     <FormControl>
                       <Input
                         {...field}
                         placeholder="Add title for video"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    {/* Add Ai Generated Title */}
+                    <div className="flex items-center gap-x-2">
+                      <FormLabel>Description</FormLabel>
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        type="button"
+                        className="rounded-full size-6 [&_svg]:size-3"
+                        onClick={() => generateDescription.mutate({ id: videoId })}
+                        disabled={generateDescription.isPending || !video.muxTrackId}
+                      >
+                        {generateDescription.isPending ? (
+                          <Loader2 className="animate-spin" />
+                        ) : (
+                          <Sparkles />
+                        )}
+                      </Button>
+                    </div>
+
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        value={field.value ?? ""}
+                        className="resize-none pr-10"
+                        placeholder="Add description for video"
                       />
                     </FormControl>
                   </FormItem>
@@ -241,7 +375,7 @@ export const FormSectionSuspense = ({ videoId }: Props) => {
                           </DropdownMenuItem>
 
                           <DropdownMenuItem
-                            onClick={() => generateThumbnail.mutate({ id: videoId })}
+                            onClick={() => setThumbnailGenerateModelOpen(true)}
                           >
                             <Sparkles className="size-4 mr-1" />
                             <span>AI Generated</span>
@@ -256,26 +390,6 @@ export const FormSectionSuspense = ({ videoId }: Props) => {
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    {/* Add Ai Generated Title */}
-                    <FormLabel>Description</FormLabel>
-
-                    <FormControl>
-                      <Textarea
-                        {...field}
-                        value={field.value ?? ""}
-                        className="resize-none pr-10"
-                        placeholder="Add description for video"
-                      />
-                    </FormControl>
                   </FormItem>
                 )}
               />
