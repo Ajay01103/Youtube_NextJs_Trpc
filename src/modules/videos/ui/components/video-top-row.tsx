@@ -14,14 +14,14 @@ export const VideoTopRow = ({ video }: VideoTopRowProps) => {
   const compactViews = useMemo(() => {
     return Intl.NumberFormat("en", {
       notation: "compact",
-    }).format(1000)
-  }, [])
+    }).format(video.viewCount)
+  }, [video.viewCount])
 
   const expandedViews = useMemo(() => {
     return Intl.NumberFormat("en", {
       notation: "standard",
-    }).format(1000)
-  }, [])
+    }).format(video.viewCount)
+  }, [video.viewCount])
 
   const compactDate = useMemo(() => {
     return formatDistanceToNow(video.createdAt, { addSuffix: true })
@@ -41,7 +41,12 @@ export const VideoTopRow = ({ video }: VideoTopRowProps) => {
         />
 
         <div className="flex overscroll-x-auto sm:min-w-[calc(50%-6px)] sm:justify-end sm:overflow-visible pb-2 -mb-2 sm:pb-0 gap-2">
-          <VideoReactions />
+          <VideoReactions
+            videoId={video.id}
+            likes={video.likeCount}
+            dislikes={video.disLikeCount}
+            viewerReaction={video.viewerReactions}
+          />
           <VideoMenu
             videoId={video.id}
             variant="secondary"
