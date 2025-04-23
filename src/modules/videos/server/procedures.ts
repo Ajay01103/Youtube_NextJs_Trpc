@@ -1,10 +1,17 @@
 import { db } from "@/db"
-import { users, videoReactions, videos, videoUpdateSchema, videoViews } from "@/db/schema"
+import {
+  subscriptions,
+  users,
+  videoReactions,
+  videos,
+  videoUpdateSchema,
+  videoViews,
+} from "@/db/schema"
 import { mux } from "@/lib/mux"
 import { baseProcedure, createTRPCRouter, protectedProcedure } from "@/trpc/init"
 import { TRPCError } from "@trpc/server"
 import { z } from "zod"
-import { and, eq, getTableColumns, inArray } from "drizzle-orm"
+import { and, eq, getTableColumns, inArray, isNotNull } from "drizzle-orm"
 import { UTApi } from "uploadthing/server"
 import { workflow } from "@/lib/qstash"
 
@@ -24,22 +31,19 @@ export const videosRouter = createTRPCRouter({
         userId = user.id
       }
 
-      const viewerReactions = db.$with("viewer_reactions").as(
-        db
-          .select({
-            videoId: videoReactions.videoId,
-            type: videoReactions.type,
-          })
-          .from(videoReactions)
-          .where(inArray(videoReactions.userId, userId ? [userId] : []))
-      )
+      // Get viewer reactions directly in the query
+
+      // We'll use a direct join instead of a CTE
 
       const [existingVideo] = await db
-        .with(viewerReactions)
         .select({
           ...getTableColumns(videos),
           user: {
             ...getTableColumns(users),
+            subscriberCount: db.$count(
+              subscriptions,
+              eq(subscriptions.creatorId, users.id)
+            ),
           },
           viewCount: db.$count(videoViews, eq(videoViews.videoId, videos.id)),
           likeCount: db.$count(
@@ -50,19 +54,55 @@ export const videosRouter = createTRPCRouter({
             videoReactions,
             and(eq(videoReactions.videoId, videos.id), eq(videoReactions.type, "dislike"))
           ),
-          viewerReactions: viewerReactions.type,
         })
         .from(videos)
         .where(eq(videos.id, input.id))
         .innerJoin(users, eq(videos.userId, users.id))
-        .leftJoin(viewerReactions, eq(viewerReactions.videoId, videos.id))
       // .groupBy(videos.id, users.id, viewerReactions.type)
 
       if (!existingVideo) {
         throw new TRPCError({ code: "NOT_FOUND" })
       }
 
-      return existingVideo
+      // Get viewer reaction type if user is logged in
+      let viewerReactionType = null
+      if (userId) {
+        const [reaction] = await db
+          .select({ type: videoReactions.type })
+          .from(videoReactions)
+          .where(
+            and(eq(videoReactions.videoId, input.id), eq(videoReactions.userId, userId))
+          )
+
+        if (reaction) {
+          viewerReactionType = reaction.type
+        }
+      }
+
+      // Check if viewer is subscribed to the creator
+      let viewerSubscribed = false
+      if (userId) {
+        const [subscription] = await db
+          .select()
+          .from(subscriptions)
+          .where(
+            and(
+              eq(subscriptions.viewerId, userId),
+              eq(subscriptions.creatorId, existingVideo.user.id)
+            )
+          )
+
+        viewerSubscribed = !!subscription
+      }
+
+      return {
+        ...existingVideo,
+        user: {
+          ...existingVideo.user,
+          viewerSubscribed,
+        },
+        viewerReactions: viewerReactionType,
+      }
     }),
   generateThumbnail: protectedProcedure
     .input(z.object({ id: z.string().uuid(), prompt: z.string().min(10) }))

@@ -30,6 +30,12 @@ export const userRelations = relations(users, ({ many }) => ({
   videos: many(videos),
   videoViews: many(videoViews),
   videoReactions: many(videoReactions),
+  subscriptions: many(subscriptions, {
+    relationName: "userSubscriptions",
+  }),
+  subscribers: many(subscriptions, {
+    relationName: "userSubscribers",
+  }),
 }))
 
 export const categories = pgTable(
@@ -167,3 +173,36 @@ export const videoReactionRelations = relations(videoReactions, ({ one }) => ({
 export const videoReactionSelectSchema = createSelectSchema(videoReactions)
 export const videoReactionInsertSchema = createInsertSchema(videoReactions)
 export const videoReactionUpdateSchema = createUpdateSchema(videoReactions)
+
+export const subscriptions = pgTable(
+  "subscriptions",
+  {
+    viewerId: uuid("viewer_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    creatorId: uuid("creator_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    primaryKey({
+      name: "subscriptions_pk",
+      columns: [table.viewerId, table.creatorId],
+    }),
+  ]
+)
+
+export const subscriptionRelations = relations(subscriptions, ({ one }) => ({
+  viewerId: one(users, {
+    fields: [subscriptions.viewerId],
+    references: [users.id],
+    relationName: "userSubscriptions",
+  }),
+  creatorId: one(users, {
+    fields: [subscriptions.creatorId],
+    references: [users.id],
+    relationName: "userSubscribers",
+  }),
+}))
