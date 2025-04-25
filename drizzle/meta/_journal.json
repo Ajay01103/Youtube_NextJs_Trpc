@@ -8,6 +8,13 @@
       "when": 1745397613496,
       "tag": "0000_magenta_ultragirl",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1745560932620,
+      "tag": "0001_magenta_klaw",
+      "breakpoints": true
     }
   ]
 }

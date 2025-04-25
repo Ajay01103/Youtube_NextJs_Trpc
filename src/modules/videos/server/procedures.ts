@@ -32,7 +32,6 @@ export const videosRouter = createTRPCRouter({
       }
 
       // Get viewer reactions directly in the query
-
       // We'll use a direct join instead of a CTE
 
       const [existingVideo] = await db

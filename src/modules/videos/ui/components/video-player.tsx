@@ -10,6 +10,10 @@ interface Props {
   onPlay?: () => void
 }
 
+export const VideoPlayerSkeleton = () => {
+  return <div className="aspect-video rounded-xl bg-black" />
+}
+
 export const VideoPlayer = ({ autoPlay, onPlay, playbackId, thumbnailUrl }: Props) => {
   return (
     <MuxPlayer
