@@ -1,3 +1,4 @@
+import { DEFAULT_LIMIT } from "@/constants"
 import { VideoView } from "@/modules/videos/ui/views/video-view"
 import { HydrateClient, trpc } from "@/trpc/server"
 import React from "react"
@@ -12,8 +13,8 @@ const VideoIdPage = async ({ params }: Props) => {
   const { videoId } = await params
 
   void trpc.videos.getOne.prefetch({ id: videoId })
-  // TODO: dont forget to change to prefetchInfinite
-  void trpc.comments.getMany.prefetch({ videoId })
+  // prefetching the infinite queries
+  void trpc.comments.getMany.prefetchInfinite({ videoId, limit: DEFAULT_LIMIT })
 
   return (
     <HydrateClient>
