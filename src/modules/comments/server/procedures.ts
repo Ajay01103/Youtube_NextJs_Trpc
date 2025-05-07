@@ -1,22 +1,53 @@
 import { db } from "@/db"
-import { comments, users } from "@/db/schema"
+import { commentReactions, comments, users } from "@/db/schema"
 import { baseProcedure, createTRPCRouter, protectedProcedure } from "@/trpc/init"
 import { TRPCError } from "@trpc/server"
-import { and, count, desc, eq, getTableColumns, lt, or } from "drizzle-orm"
+import {
+  and,
+  count,
+  desc,
+  eq,
+  getTableColumns,
+  inArray,
+  isNotNull,
+  isNull,
+  lt,
+  or,
+} from "drizzle-orm"
 import { z } from "zod"
 
 export const commentsRouter = createTRPCRouter({
   create: protectedProcedure
-    .input(z.object({ videoId: z.string().uuid(), value: z.string() }))
+    .input(
+      z.object({
+        videoId: z.string().uuid(),
+        parentId: z.string().uuid().nullish(),
+        value: z.string(),
+      })
+    )
     .mutation(async ({ input, ctx }) => {
       const { id: userId } = ctx.user
-      const { videoId, value } = input
+      const { videoId, parentId, value } = input
+
+      const [existingComment] = await db
+        .select()
+        .from(comments)
+        .where(inArray(comments.id, parentId ? [parentId] : []))
+
+      if (!existingComment && parentId) {
+        throw new TRPCError({ code: "NOT_FOUND" })
+      }
+
+      if (existingComment?.parentId && parentId) {
+        throw new TRPCError({ code: "BAD_REQUEST" })
+      }
 
       const [createdComment] = await db
         .insert(comments)
         .values({
           userId,
           videoId,
+          parentId,
           value,
         })
         .returning()
@@ -44,6 +75,7 @@ export const commentsRouter = createTRPCRouter({
     .input(
       z.object({
         videoId: z.string().uuid(),
+        parentId: z.string().uuid().nullish(),
         cursor: z
           .object({
             id: z.string().uuid(),
@@ -53,41 +85,128 @@ export const commentsRouter = createTRPCRouter({
         limit: z.number().min(1).max(100),
       })
     )
-    .query(async ({ input }) => {
-      const { videoId, cursor, limit } = input
+    .query(async ({ input, ctx }) => {
+      const { videoId, cursor, limit, parentId } = input
+      const { clerkUserId } = ctx
 
-      const [totalData, data] = await Promise.all([
-        db
+      let userId
+
+      const [user] = await db
+        .select()
+        .from(users)
+        .where(inArray(users.clerkId, clerkUserId ? [clerkUserId] : []))
+
+      if (user) {
+        userId = user.id
+      }
+
+      // Get total count of comments for this video
+      const [totalData] = await db
+        .select({
+          count: count(),
+        })
+        .from(comments)
+        .where(
+          and(
+            eq(comments.videoId, videoId)
+            // isNull(comments.parentId)
+          )
+        )
+
+      // Get comments with user info and reaction counts
+      const commentsData = await db
+        .select({
+          ...getTableColumns(comments),
+          user: users,
+          likeCount: db.$count(
+            commentReactions,
+            and(
+              eq(commentReactions.type, "like"),
+              eq(commentReactions.commentId, comments.id)
+            )
+          ),
+          dislikeCount: db.$count(
+            commentReactions,
+            and(
+              eq(commentReactions.type, "dislike"),
+              eq(commentReactions.commentId, comments.id)
+            )
+          ),
+        })
+        .from(comments)
+        .where(
+          and(
+            eq(comments.videoId, videoId),
+            parentId ? eq(comments.parentId, parentId) : isNull(comments.parentId),
+            cursor
+              ? or(
+                  lt(comments.updatedAt, cursor.updatedAt),
+                  and(
+                    eq(comments.updatedAt, cursor.updatedAt),
+                    lt(comments.id, cursor.id)
+                  )
+                )
+              : undefined
+          )
+        )
+        .innerJoin(users, eq(comments.userId, users.id))
+        .orderBy(desc(comments.updatedAt), desc(comments.id))
+        .limit(limit + 1)
+
+      // Get viewer reactions if user is logged in
+      let viewerReactionsMap = new Map()
+      if (userId) {
+        const viewerReactions = await db
           .select({
-            count: count(),
+            commentId: commentReactions.commentId,
+            type: commentReactions.type,
           })
-          .from(comments)
-          .where(eq(comments.videoId, videoId)),
+          .from(commentReactions)
+          .where(
+            and(
+              eq(commentReactions.userId, userId),
+              inArray(
+                commentReactions.commentId,
+                commentsData.map((comment) => comment.id)
+              )
+            )
+          )
 
-        db
+        // Create a map of comment ID to reaction type
+        for (const reaction of viewerReactions) {
+          viewerReactionsMap.set(reaction.commentId, reaction.type)
+        }
+      }
+
+      // Get reply counts for each comment
+      const replyCountsMap = new Map()
+
+      if (commentsData.length > 0) {
+        const commentIds = commentsData.map((comment) => comment.id)
+
+        const replyCounts = await db
           .select({
-            ...getTableColumns(comments),
-            user: users,
+            parentId: comments.parentId,
+            count: count(comments.id).as("count"),
           })
           .from(comments)
           .where(
-            and(
-              eq(comments.videoId, videoId),
-              cursor
-                ? or(
-                    lt(comments.updatedAt, cursor.updatedAt),
-                    and(
-                      eq(comments.updatedAt, cursor.updatedAt),
-                      lt(comments.id, cursor.id)
-                    )
-                  )
-                : undefined
-            )
+            and(isNotNull(comments.parentId), inArray(comments.parentId, commentIds))
           )
-          .innerJoin(users, eq(comments.userId, users.id))
-          .orderBy(desc(comments.updatedAt), desc(comments.id))
-          .limit(limit + 1),
-      ])
+          .groupBy(comments.parentId)
+
+        // Create a map of parent comment ID to reply count
+        for (const reply of replyCounts) {
+          replyCountsMap.set(reply.parentId, reply.count)
+        }
+      }
+
+      // Combine the data
+      const data = commentsData.map((comment) => ({
+        ...comment,
+        viewerReaction: viewerReactionsMap.get(comment.id) || null,
+        replyCount: replyCountsMap.get(comment.id) || 0,
+      }))
 
       const hasMore = data.length > limit
 
@@ -104,7 +223,7 @@ export const commentsRouter = createTRPCRouter({
         : null
 
       return {
-        totalCount: totalData[0].count,
+        totalCount: totalData.count,
         items,
         nextCursor,
       }

@@ -12,15 +12,25 @@ import { toast } from "sonner"
 
 interface CommentsFormProps {
   videoId: string
+  parentId?: string
   onSuccess?: () => void
+  onCancel?: () => void
+  variant?: "comment" | "reply"
 }
 
 const formSchema = z.object({
   videoId: z.string().nonempty(),
+  parentId: z.string().nullish(),
   value: z.string().nonempty(),
 })
 
-export const CommentsForm = ({ videoId, onSuccess }: CommentsFormProps) => {
+export const CommentsForm = ({
+  videoId,
+  onSuccess,
+  parentId,
+  onCancel,
+  variant = "comment",
+}: CommentsFormProps) => {
   const { user } = useUser()
   const utils = trpc.useUtils()
   const clerk = useClerk()
@@ -47,6 +57,7 @@ export const CommentsForm = ({ videoId, onSuccess }: CommentsFormProps) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       videoId,
+      parentId,
       value: "",
     },
   })
@@ -54,6 +65,11 @@ export const CommentsForm = ({ videoId, onSuccess }: CommentsFormProps) => {
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     // console.log(values)
     createComment.mutate(values)
+  }
+
+  const handleCancel = () => {
+    form.reset()
+    onCancel?.()
   }
 
   return (
@@ -77,7 +93,9 @@ export const CommentsForm = ({ videoId, onSuccess }: CommentsFormProps) => {
                 <FormControl>
                   <Textarea
                     {...field}
-                    placeholder="Add a comment..."
+                    placeholder={
+                      variant === "reply" ? "Reply to this comment" : "Add a comment"
+                    }
                     className="resize-none bg-transparent overflow-hidden min-h-0"
                   />
                 </FormControl>
@@ -88,12 +106,21 @@ export const CommentsForm = ({ videoId, onSuccess }: CommentsFormProps) => {
           />
 
           <div className="justify-end gap-2 mt-2 flex">
+            {onCancel && (
+              <Button
+                variant="ghost"
+                type="button"
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+            )}
             <Button
               disabled={createComment.isPending}
               type="submit"
               size="sm"
             >
-              Comment
+              {variant === "reply" ? "Reply" : "Comment"}
             </Button>
           </div>
         </div>
