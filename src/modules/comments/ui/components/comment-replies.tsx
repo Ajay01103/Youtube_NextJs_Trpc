@@ -1,7 +1,8 @@
 import { DEFAULT_LIMIT } from "@/constants"
 import { trpc } from "@/trpc/client"
-import { Loader2 } from "lucide-react"
+import { CornerDownRight, Loader2 } from "lucide-react"
 import { CommentItem } from "./comment-item"
+import { Button } from "@/components/ui/button"
 
 interface CommentRepliesProps {
   parentId: string
@@ -9,16 +10,17 @@ interface CommentRepliesProps {
 }
 
 export const CommentReplies = ({ parentId, videoId }: CommentRepliesProps) => {
-  const { data, isLoading } = trpc.comments.getMany.useInfiniteQuery(
-    {
-      limit: DEFAULT_LIMIT,
-      videoId,
-      parentId,
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    }
-  )
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    trpc.comments.getMany.useInfiniteQuery(
+      {
+        limit: DEFAULT_LIMIT,
+        videoId,
+        parentId,
+      },
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+      }
+    )
   return (
     <div className="pl-14">
       <div className="flex flex-col gap-4 mt-2">
@@ -38,6 +40,16 @@ export const CommentReplies = ({ parentId, videoId }: CommentRepliesProps) => {
               />
             ))}
       </div>
+      {hasNextPage && (
+        <Button
+          variant="tertiary"
+          size="sm"
+          onClick={() => fetchNextPage()}
+        >
+          <CornerDownRight />
+          Show more replies
+        </Button>
+      )}
     </div>
   )
 }

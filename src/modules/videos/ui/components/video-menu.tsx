@@ -14,7 +14,7 @@ interface VideoMenuProps {
   onRemove?: () => void
 }
 
-export const VideoMenu = ({ videoId, onRemove, variant }: VideoMenuProps) => {
+export const VideoMenu = ({ videoId, onRemove, variant = "ghost" }: VideoMenuProps) => {
   const onShare = () => {
     // chnage this url if deploying outside the vercel
     const fullUrl = `${
