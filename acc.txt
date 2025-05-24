@@ -2,3 +2,8 @@ kegic89171@perceint.com
 vz
 tixita2772@asaption.com
 vz
+
+client in trpc 
+video-menu in modules/videos/ui/components 
+form-section in modules/studio can cause problems in prod
+check for process.env.vercel_url and APP_URL

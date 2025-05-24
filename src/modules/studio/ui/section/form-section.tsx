@@ -36,6 +36,7 @@ import {
   Loader2,
   Lock,
   MoreVertical,
+  RefreshCcw,
   RotateCcw,
   Router,
   Sparkles,
@@ -165,6 +166,17 @@ export const FormSectionSuspense = ({ videoId }: Props) => {
     },
   })
 
+  const revalidate = trpc.videos.revalidate.useMutation({
+    onSuccess: () => {
+      toast.success("Video revalidated")
+      utils.studio.getMany.invalidate()
+      utils.studio.getOne.invalidate({ id: videoId })
+    },
+    onError: () => {
+      toast.error("Something went wrong")
+    },
+  })
+
   const restoreThumbnail = trpc.videos.restoreThumbnail.useMutation({
     onSuccess: () => {
       utils.studio.getMany.invalidate()
@@ -261,6 +273,10 @@ export const FormSectionSuspense = ({ videoId }: Props) => {
                   <DropdownMenuItem onClick={() => onRemove.mutate({ id: videoId })}>
                     <TrashIcon className="size-4 mr-2 text-destructive" />
                     <span>Delete</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => revalidate.mutate({ id: videoId })}>
+                    <RefreshCcw className="size-4 mr-2" />
+                    <span>Revalidate</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
