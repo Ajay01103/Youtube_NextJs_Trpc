@@ -1,2 +1,3 @@
 export const DEFAULT_LIMIT = 5
-export const APP_URL = process.env.VERCEL_URL //TODO: chnage to custom url in prod
+export const APP_URL =
+  process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000" //TODO: chnage to custom url in prod

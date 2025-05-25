@@ -1,3 +1,4 @@
+import { DEFAULT_LIMIT } from "@/constants"
 import { SearchView } from "@/modules/search/ui/views/search-view"
 import { HydrateClient, trpc } from "@/trpc/server"
 
@@ -15,6 +16,11 @@ const SearchPage = async ({ searchParams }: PageProps) => {
 
   // prefetching the categories
   void trpc.categories.getMany.prefetch()
+  void trpc.search.getMany.prefetchInfinite({
+    query,
+    categoryId,
+    limit: DEFAULT_LIMIT,
+  })
 
   return (
     <HydrateClient>

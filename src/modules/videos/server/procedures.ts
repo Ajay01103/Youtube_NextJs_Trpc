@@ -8,7 +8,11 @@ import {
   videoViews,
 } from "@/db/schema"
 import { mux } from "@/lib/mux"
-import { baseProcedure, createTRPCRouter, protectedProcedure } from "@/trpc/init"
+import {
+  baseProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+} from "@/trpc/init"
 import { TRPCError } from "@trpc/server"
 import { z } from "zod"
 import { and, eq, getTableColumns, inArray, isNotNull } from "drizzle-orm"
@@ -47,11 +51,17 @@ export const videosRouter = createTRPCRouter({
           viewCount: db.$count(videoViews, eq(videoViews.videoId, videos.id)),
           likeCount: db.$count(
             videoReactions,
-            and(eq(videoReactions.videoId, videos.id), eq(videoReactions.type, "like"))
+            and(
+              eq(videoReactions.videoId, videos.id),
+              eq(videoReactions.type, "like")
+            )
           ),
           disLikeCount: db.$count(
             videoReactions,
-            and(eq(videoReactions.videoId, videos.id), eq(videoReactions.type, "dislike"))
+            and(
+              eq(videoReactions.videoId, videos.id),
+              eq(videoReactions.type, "dislike")
+            )
           ),
         })
         .from(videos)
@@ -70,7 +80,10 @@ export const videosRouter = createTRPCRouter({
           .select({ type: videoReactions.type })
           .from(videoReactions)
           .where(
-            and(eq(videoReactions.videoId, input.id), eq(videoReactions.userId, userId))
+            and(
+              eq(videoReactions.videoId, input.id),
+              eq(videoReactions.userId, userId)
+            )
           )
 
         if (reaction) {
@@ -157,7 +170,9 @@ export const videosRouter = createTRPCRouter({
         throw new TRPCError({ code: "BAD_REQUEST" })
       }
 
-      const directUpload = await mux.video.uploads.retrieve(existingVideo.muxUploadId)
+      const directUpload = await mux.video.uploads.retrieve(
+        existingVideo.muxUploadId
+      )
 
       if (!directUpload || !directUpload.asset_id) {
         throw new TRPCError({ code: "BAD_REQUEST" })
@@ -249,32 +264,34 @@ export const videosRouter = createTRPCRouter({
 
       return removedVideo
     }),
-  update: protectedProcedure.input(videoUpdateSchema).mutation(async ({ ctx, input }) => {
-    const { id: userId } = ctx.user
-    const { title, description, categoryId, visibility, id } = input
+  update: protectedProcedure
+    .input(videoUpdateSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { id: userId } = ctx.user
+      const { title, description, categoryId, visibility, id } = input
 
-    if (!id) {
-      throw new TRPCError({ code: "BAD_REQUEST" })
-    }
+      if (!id) {
+        throw new TRPCError({ code: "BAD_REQUEST" })
+      }
 
-    const [updateVideo] = await db
-      .update(videos)
-      .set({
-        title,
-        description,
-        categoryId,
-        visibility,
-        updatedAt: new Date(),
-      })
-      .where(and(eq(videos.id, id), eq(videos.userId, userId)))
-      .returning()
+      const [updateVideo] = await db
+        .update(videos)
+        .set({
+          title,
+          description,
+          categoryId,
+          visibility,
+          updatedAt: new Date(),
+        })
+        .where(and(eq(videos.id, id), eq(videos.userId, userId)))
+        .returning()
 
-    if (!updateVideo) {
-      throw new TRPCError({ code: "NOT_FOUND" })
-    }
+      if (!updateVideo) {
+        throw new TRPCError({ code: "NOT_FOUND" })
+      }
 
-    return updateVideo
-  }),
+      return updateVideo
+    }),
   create: protectedProcedure.mutation(async ({ ctx }) => {
     const { id: userId } = ctx.user
 

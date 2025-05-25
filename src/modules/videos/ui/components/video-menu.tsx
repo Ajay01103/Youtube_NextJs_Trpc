@@ -5,7 +5,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { ListPlusIcon, MoreVerticalIcon, ShareIcon, Trash2Icon } from "lucide-react"
+import { APP_URL } from "@/constants"
+import {
+  ListPlusIcon,
+  MoreVerticalIcon,
+  ShareIcon,
+  Trash2Icon,
+} from "lucide-react"
 import { toast } from "sonner"
 
 interface VideoMenuProps {
@@ -14,12 +20,14 @@ interface VideoMenuProps {
   onRemove?: () => void
 }
 
-export const VideoMenu = ({ videoId, onRemove, variant = "ghost" }: VideoMenuProps) => {
+export const VideoMenu = ({
+  videoId,
+  onRemove,
+  variant = "ghost",
+}: VideoMenuProps) => {
   const onShare = () => {
     // chnage this url if deploying outside the vercel
-    const fullUrl = `${
-      process.env.VERCEL_URL || "http://localhost:3000"
-    }/videos/${videoId}`
+    const fullUrl = `${APP_URL}/videos/${videoId}`
     navigator.clipboard.writeText(fullUrl)
     toast.success("Link copied to clipboard")
   }
@@ -47,7 +55,7 @@ export const VideoMenu = ({ videoId, onRemove, variant = "ghost" }: VideoMenuPro
           <ListPlusIcon className="mr-2 size-4" />
           Add to playlist
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => {}}>
+        <DropdownMenuItem onClick={onRemove}>
           <Trash2Icon className="mr-2 size-4" />
           Remove
         </DropdownMenuItem>
