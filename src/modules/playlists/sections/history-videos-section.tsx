@@ -14,46 +14,40 @@ import { trpc } from "@/trpc/client"
 import { Suspense } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 
-interface ResultsSectionProps {
-  query: string | undefined
-  categoryId: string | undefined
-}
-
-export const ResultsSection = (props: ResultsSectionProps) => {
+export const HistoryVideosSection = () => {
   return (
-    <Suspense
-      key={`${props.query}-${props.categoryId}`}
-      fallback={<ResultsSectionSkeleton />}
-    >
-      <ErrorBoundary fallback={<p>Error!</p>}>
-        <ResultsSectionSuspense {...props} />
+    <Suspense fallback={<HistoryVideosSectionSkeleton />}>
+      <ErrorBoundary fallback={<p>Error</p>}>
+        <HistoryVideosSectionSuspense />
       </ErrorBoundary>
     </Suspense>
   )
 }
 
-const ResultsSectionSkeleton = () => {
+const HistoryVideosSectionSkeleton = () => {
   return (
     <div>
-      <div className="hidden flex-col gap-4 md:flex">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <VideoRowCardSkeleton key={index} />
+      <div className="flex flex-col gap-4 gap-y-10 md:hidden">
+        {Array.from({ length: 18 }).map((_, index) => (
+          <VideoGridCardSkeleton key={index} />
         ))}
       </div>
-      <div className="flex flex-col gap-4 p-4 gap-y-10 pt-6 md:hidden">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <VideoGridCardSkeleton key={index} />
+
+      <div className="hidden flex-col gap-4 md:flex">
+        {Array.from({ length: 18 }).map((_, index) => (
+          <VideoRowCardSkeleton
+            key={index}
+            size="compact"
+          />
         ))}
       </div>
     </div>
   )
 }
 
-const ResultsSectionSuspense = ({ categoryId, query }: ResultsSectionProps) => {
-  const [results, resultsQuery] = trpc.search.getMany.useSuspenseInfiniteQuery(
+const HistoryVideosSectionSuspense = () => {
+  const [videos, query] = trpc.playlists.getHistory.useSuspenseInfiniteQuery(
     {
-      query,
-      categoryId,
       limit: DEFAULT_LIMIT,
     },
     {
@@ -62,9 +56,9 @@ const ResultsSectionSuspense = ({ categoryId, query }: ResultsSectionProps) => {
   )
 
   return (
-    <>
+    <div>
       <div className="flex flex-col gap-4 gap-y-10 md:hidden">
-        {results.pages
+        {videos.pages
           .flatMap((page) => page.items)
           .map((video) => (
             <VideoGridCard
@@ -74,22 +68,23 @@ const ResultsSectionSuspense = ({ categoryId, query }: ResultsSectionProps) => {
           ))}
       </div>
 
-      <div className="hidden md:flex flex-col gap-4">
-        {results.pages
+      <div className="hidden flex-col gap-4 md:flex">
+        {videos.pages
           .flatMap((page) => page.items)
           .map((video) => (
             <VideoRowCard
               key={video.id}
               data={video}
+              size="compact"
             />
           ))}
       </div>
 
       <InfiniteScroll
-        hasNextPage={resultsQuery.hasNextPage}
-        isFetchingNextPage={resultsQuery.isFetchingNextPage}
-        fetchNextPage={resultsQuery.fetchNextPage}
+        hasNextPage={query.hasNextPage}
+        isFetchingNextPage={query.isFetchingNextPage}
+        fetchNextPage={query.fetchNextPage}
       />
-    </>
+    </div>
   )
 }
