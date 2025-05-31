@@ -1,16 +1,42 @@
 import { db } from "@/db"
 import {
-  reactionType,
+  playLists,
+  playlistVideos,
   users,
   videoReactions,
   videos,
   videoViews,
 } from "@/db/schema"
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init"
+import { TRPCError } from "@trpc/server"
 import { and, desc, eq, getTableColumns, lt, or } from "drizzle-orm"
 import { z } from "zod"
 
 export const playlistsRouter = createTRPCRouter({
+  create: protectedProcedure
+    .input(
+      z.object({
+        name: z.string().min(1),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { name } = input
+      const { id: userId } = ctx.user
+
+      const [createdPlaylist] = await db
+        .insert(playLists)
+        .values({
+          userId,
+          name,
+        })
+        .returning()
+
+      if (!createdPlaylist) {
+        throw new TRPCError({ code: "BAD_REQUEST" })
+      }
+
+      return createdPlaylist
+    }),
   getHistory: protectedProcedure
     .input(
       z.object({
@@ -91,6 +117,67 @@ export const playlistsRouter = createTRPCRouter({
         ? {
             id: lastItem.id,
             viewedAt: lastItem.viewedAt,
+          }
+        : null
+
+      return { items, nextCursor }
+    }),
+  getMany: protectedProcedure
+    .input(
+      z.object({
+        cursor: z
+          .object({
+            id: z.string().uuid(),
+            updatedAt: z.date(),
+          })
+          .nullish(),
+        limit: z.number().min(1).max(100),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const { id: userId } = ctx.user
+      const { limit, cursor } = input
+
+      const data = await db
+        .select({
+          ...getTableColumns(playLists),
+          videoCount: db.$count(
+            playlistVideos,
+            eq(playLists.id, playlistVideos.playlistId)
+          ),
+          user: users,
+        })
+        .from(playLists)
+        .innerJoin(users, eq(playLists.userId, users.id))
+        .where(
+          and(
+            eq(playLists.userId, userId),
+            cursor
+              ? or(
+                  lt(playLists.updatedAt, cursor.updatedAt),
+                  and(
+                    eq(playLists.updatedAt, cursor.updatedAt),
+                    lt(playLists.id, cursor.id)
+                  )
+                )
+              : undefined
+          )
+        )
+        .orderBy(desc(playLists.updatedAt), desc(playLists.id))
+        // Add 1 to the limit to check if there is more data
+        .limit(limit + 1)
+
+      const hasMore = data.length > limit
+      // remove the last item if there is more data
+
+      const items = hasMore ? data.slice(0, -1) : data
+      // Set the next cursor to the last item if there is more data
+
+      const lastItem = items[items.length - 1]
+      const nextCursor = hasMore
+        ? {
+            id: lastItem.id,
+            updatedAt: lastItem.updatedAt,
           }
         : null
 
