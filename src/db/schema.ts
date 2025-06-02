@@ -330,7 +330,7 @@ export const playlistVideos = pgTable(
     videoId: uuid("video_id")
       .references(() => videos.id, { onDelete: "cascade" })
       .notNull(),
-    position: integer("position").notNull(),
+    position: integer("position"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
