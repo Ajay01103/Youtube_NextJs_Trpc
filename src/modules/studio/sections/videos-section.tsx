@@ -136,7 +136,9 @@ export const VideosSectionSuspence = () => {
                       </div>
 
                       <div className="flex flex-col overflow-hidden gap-y-1">
-                        <span className="text-sm line-clamp-1">{video.title}</span>
+                        <span className="text-sm line-clamp-1">
+                          {video.title}
+                        </span>
                         <span className="text-xs text-muted-foreground line-clamp-1">
                           {video.description || "No description"}
                         </span>
@@ -162,9 +164,9 @@ export const VideosSectionSuspence = () => {
                     <TableCell className="text-sm">
                       {format(new Date(video.createdAt), "d MMM yyyy")}
                     </TableCell>
-                    <TableCell>Views</TableCell>
-                    <TableCell>Comments</TableCell>
-                    <TableCell>Likes</TableCell>
+                    <TableCell>{video.viewCount}</TableCell>
+                    <TableCell>{video.commentCount}</TableCell>
+                    <TableCell>{video.likeCount}</TableCell>
                   </TableRow>
                 </Link>
               ))}
