@@ -1,9 +1,15 @@
 "use client"
 
 import { Button, buttonVariants } from "@/components/ui/button"
-import { Clapperboard, UserCircle } from "lucide-react"
+import { Clapperboard, User, UserCircle } from "lucide-react"
 
-import { UserButton, SignInButton, SignIn, SignedOut, SignedIn } from "@clerk/nextjs"
+import {
+  UserButton,
+  SignInButton,
+  SignIn,
+  SignedOut,
+  SignedIn,
+} from "@clerk/nextjs"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -32,6 +38,11 @@ export const AuthButton = () => {
               label="Studio"
               href="/studio"
               labelIcon={<Clapperboard className="size-4" />}
+            />
+            <UserButton.Link
+              label="My Profile"
+              href="/users/current"
+              labelIcon={<User className="size-4" />}
             />
           </UserButton.MenuItems>
         </UserButton>

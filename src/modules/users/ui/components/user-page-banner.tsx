@@ -38,6 +38,6 @@ export const UserPageBanner = ({ user }: Props) => {
   )
 }
 
-export const userPageBannerSkeleton = () => {
+export const UserPageBannerSkeleton = () => {
   return <Skeleton className="w-full max-h-[200px] h-[15vh] md:h-[25vh]" />
 }
