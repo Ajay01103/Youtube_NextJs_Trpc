@@ -69,6 +69,55 @@ export const ourFileRouter = {
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
       return { uploadedBy: metadata.user.id }
     }),
+  bannerUploader: f({
+    image: {
+      maxFileSize: "4MB",
+      maxFileCount: 1,
+    },
+  })
+    .middleware(async () => {
+      const { userId: clerkUserId } = await auth()
+
+      // If you throw, the user will not be able to upload
+      if (!clerkUserId) throw new UploadThingError("Unauthorized")
+
+      const [existingUser] = await db.select().from(users).where(eq(users.clerkId, clerkUserId))
+
+      if (!existingUser) throw new UploadThingError("Unauthorized")
+
+      
+
+      if (existingUser.bannerKey) {
+        const utApi = new UTApi()
+
+        await utApi.deleteFiles(existingUser.bannerKey)
+        await db
+          .update(users)
+          .set({
+            bannerKey: null,
+            bannerUrl: null,
+          })
+          .where(and(eq(users.id, existingUser.id)))
+      }
+
+      // Whatever is returned here is accessible in onUploadComplete as `metadata`
+      return { userId: existingUser.id }
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      // This code RUNS ON YOUR SERVER after upload
+      await db
+        .update(users)
+        .set({
+          bannerUrl: file.ufsUrl,
+          bannerKey: file.key,
+        })
+        .where(and(eq(users.id, metadata.userId)))
+
+      //   console.log("file url", file.ufsUrl)
+
+      // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
+      return { uploadedBy: metadata.userId }
+    }),
 } satisfies FileRouter
 
 export type OurFileRouter = typeof ourFileRouter
