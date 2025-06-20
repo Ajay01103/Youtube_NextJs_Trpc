@@ -26,7 +26,7 @@ export const PlaylistHeaderSection = ({ playlistId }: Props) => {
 export const PlaylistHeaderSectionSuspense = ({ playlistId }: Props) => {
   const router = useRouter()
   const utils = trpc.useUtils()
-  const [playlists] = trpc.playlists.getOne.useSuspenseQuery({ id: playlistId })
+  // const [playlists] = trpc.playlists.getOne.useSuspenseQuery({ id: playlistId })
 
   const remove = trpc.playlists.remove.useMutation({
     onSuccess: () => {
@@ -45,9 +45,7 @@ export const PlaylistHeaderSectionSuspense = ({ playlistId }: Props) => {
     <div className="flex justify-between items-center">
       <div>
         <h1 className="text-2xl font-bold">Playlist Videos</h1>
-        <p className="text-xs text-muted-foreground">
-          Videos from the playlist
-        </p>
+        <p className="text-xs text-muted-foreground">Videos from the playlist</p>
       </div>
 
       <Button

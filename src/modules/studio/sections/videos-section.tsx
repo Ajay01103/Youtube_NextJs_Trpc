@@ -121,6 +121,7 @@ export const VideosSectionSuspence = () => {
               .flatMap((page) => page.items)
               .map((video) => (
                 <Link
+                  prefetch
                   href={`/studio/videos/${video.id}`}
                   key={video.id}
                   legacyBehavior
@@ -136,9 +137,7 @@ export const VideosSectionSuspence = () => {
                       </div>
 
                       <div className="flex flex-col overflow-hidden gap-y-1">
-                        <span className="text-sm line-clamp-1">
-                          {video.title}
-                        </span>
+                        <span className="text-sm line-clamp-1">{video.title}</span>
                         <span className="text-xs text-muted-foreground line-clamp-1">
                           {video.description || "No description"}
                         </span>

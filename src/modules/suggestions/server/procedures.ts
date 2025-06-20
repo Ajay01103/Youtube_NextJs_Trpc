@@ -19,7 +19,7 @@ export const suggestionsRouter = createTRPCRouter({
         limit: z.number().min(1).max(100),
       })
     )
-    .query(async ({ ctx, input }) => {
+    .query(async ({ input }) => {
       const { limit, cursor, videoId } = input
 
       const [existingVideo] = await db.select().from(videos).where(eq(videos.id, videoId))

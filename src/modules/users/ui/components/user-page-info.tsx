@@ -53,7 +53,13 @@ export const UserPageInfo = ({ user }: Props) => {
             className="w-full mt-3 rounded-full"
             variant="secondary"
           >
-            <Link href="/studio"> Go to studio</Link>
+            <Link
+              prefetch
+              href="/studio"
+            >
+              {" "}
+              Go to studio
+            </Link>
           </Button>
         ) : (
           <SubscriptionButton
@@ -96,7 +102,13 @@ export const UserPageInfo = ({ user }: Props) => {
               className="mt-3 rounded-full"
               variant="secondary"
             >
-              <Link href="/studio"> Go to studio</Link>
+              <Link
+                prefetch
+                href="/studio"
+              >
+                {" "}
+                Go to studio
+              </Link>
             </Button>
           ) : (
             <SubscriptionButton

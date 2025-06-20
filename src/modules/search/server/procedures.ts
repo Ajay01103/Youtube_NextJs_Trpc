@@ -1,9 +1,8 @@
-import { z } from "zod"
 import { db } from "@/db"
 import { users, videoReactions, videos, videoViews } from "@/db/schema"
 import { baseProcedure, createTRPCRouter } from "@/trpc/init"
 import { and, desc, eq, getTableColumns, ilike, lt, or } from "drizzle-orm"
-import { TRPCError } from "@trpc/server"
+import { z } from "zod"
 
 export const searchRouter = createTRPCRouter({
   getMany: baseProcedure
@@ -30,17 +29,11 @@ export const searchRouter = createTRPCRouter({
           viewCount: db.$count(videoViews, eq(videoViews.videoId, videos.id)),
           likesCount: db.$count(
             videoReactions,
-            and(
-              eq(videoReactions.videoId, videos.id),
-              eq(videoReactions.type, "like")
-            )
+            and(eq(videoReactions.videoId, videos.id), eq(videoReactions.type, "like"))
           ),
           dislikesCount: db.$count(
             videoReactions,
-            and(
-              eq(videoReactions.videoId, videos.id),
-              eq(videoReactions.type, "dislike")
-            )
+            and(eq(videoReactions.videoId, videos.id), eq(videoReactions.type, "dislike"))
           ),
         })
         .from(videos)
@@ -53,10 +46,7 @@ export const searchRouter = createTRPCRouter({
             cursor
               ? or(
                   lt(videos.updatedAt, cursor.updatedAt),
-                  and(
-                    eq(videos.updatedAt, cursor.updatedAt),
-                    lt(videos.id, cursor.id)
-                  )
+                  and(eq(videos.updatedAt, cursor.updatedAt), lt(videos.id, cursor.id))
                 )
               : undefined
           )

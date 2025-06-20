@@ -1,13 +1,12 @@
 "use client"
 
-import { DEFAULT_LIMIT } from "@/constants"
-import { videos } from "@/db/schema"
-import { trpc } from "@/trpc/client"
-import { VideoRowCard, VideoRowCardSkeleton } from "../components/video-row-card"
-import { VideoGridCard, VideoGridCardSkeleton } from "../components/video-grid-card"
 import { InfiniteScroll } from "@/components/infiniteScroll"
+import { DEFAULT_LIMIT } from "@/constants"
+import { trpc } from "@/trpc/client"
 import { Suspense } from "react"
 import { ErrorBoundary } from "react-error-boundary"
+import { VideoGridCard, VideoGridCardSkeleton } from "../components/video-grid-card"
+import { VideoRowCard, VideoRowCardSkeleton } from "../components/video-row-card"
 
 interface Props {
   videoId: string

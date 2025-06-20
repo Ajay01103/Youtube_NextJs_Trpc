@@ -4,8 +4,8 @@ import { useAuth } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
 import { Edit2 } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
-import { BannerUploadModal } from "@/modules/studio/ui/components/thumbnail-upload-modal"
 import { useState } from "react"
+import { BannerUploadModal } from "./banner-upload-modal"
 
 interface Props {
   user: UserGetOneOutput
@@ -28,9 +28,7 @@ export const UserPageBanner = ({ user }: Props) => {
           user.bannerUrl ? "bg-cover bg-center" : "bg-gray-100"
         )}
         style={{
-          backgroundImage: user.bannerUrl
-            ? `url(${user.bannerUrl})`
-            : undefined,
+          backgroundImage: user.bannerUrl ? `url(${user.bannerUrl})` : undefined,
         }}
       >
         {user.clerkId === userId && (

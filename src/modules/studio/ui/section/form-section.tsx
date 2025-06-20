@@ -7,13 +7,7 @@ import { ErrorBoundary } from "react-error-boundary"
 
 import { z } from "zod"
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -33,6 +27,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { videoUpdateSchema } from "@/db/schema"
+import { snakeCaseToTitle } from "@/lib/utils"
+import { THUMBNAIL_FALLBACK } from "@/modules/constants"
 import { VideoPlayer } from "@/modules/videos/ui/components/video-player"
 import {
   CheckCircle2,
@@ -44,20 +40,18 @@ import {
   MoreVertical,
   RefreshCcw,
   RotateCcw,
-  Router,
   Sparkles,
   TrashIcon,
 } from "lucide-react"
-import Link from "next/link"
-import { toast } from "sonner"
-import { snakeCaseToTitle } from "@/lib/utils"
-import { useRouter } from "next/navigation"
 import Image from "next/image"
-import { THUMBNAIL_FALLBACK } from "@/modules/constants"
-import { ThumbnailUploadModal } from "../components/thumbnail-upload-modal"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+// import { ThumbnailUploadModal } from "../components/thumbnail-upload-modal"
 import { ThumbnailGenerateModal } from "@/components/thumbnail-generate-modal"
 import { Skeleton } from "@/components/ui/skeleton"
 import { APP_URL } from "@/constants"
+import { ThumbnailUploadModal } from "../components/thumbnail-upload-modal"
 
 interface Props {
   videoId: string
@@ -143,8 +137,7 @@ export const FormSectionSuspense = ({ videoId }: Props) => {
   const router = useRouter()
   const [isCopied, setIsCopied] = useState(false)
   const [thumbnailModalOpen, setThumbnailModalopen] = useState(false)
-  const [thumbnailGenerateModelOpen, setThumbnailGenerateModelOpen] =
-    useState(false)
+  const [thumbnailGenerateModelOpen, setThumbnailGenerateModelOpen] = useState(false)
 
   const utils = trpc.useUtils()
   const [video] = trpc.studio.getOne.useSuspenseQuery({ id: videoId })
@@ -243,7 +236,7 @@ export const FormSectionSuspense = ({ videoId }: Props) => {
     <>
       <ThumbnailUploadModal
         open={thumbnailModalOpen}
-        onOpenChnage={setThumbnailModalopen}
+        onOpenChange={setThumbnailModalopen}
         videoId={videoId}
       />
       <ThumbnailGenerateModal
@@ -256,9 +249,7 @@ export const FormSectionSuspense = ({ videoId }: Props) => {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h1 className="text-2xl font-bold">Video Details</h1>
-              <p className="text-sm text-muted-foreground">
-                Manage your video Details
-              </p>
+              <p className="text-sm text-muted-foreground">Manage your video Details</p>
             </div>
 
             <div className="flex items-center gap-x-2">
@@ -280,15 +271,11 @@ export const FormSectionSuspense = ({ videoId }: Props) => {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="start">
-                  <DropdownMenuItem
-                    onClick={() => onRemove.mutate({ id: videoId })}
-                  >
+                  <DropdownMenuItem onClick={() => onRemove.mutate({ id: videoId })}>
                     <TrashIcon className="size-4 mr-2 text-destructive" />
                     <span>Delete</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => revalidate.mutate({ id: videoId })}
-                  >
+                  <DropdownMenuItem onClick={() => revalidate.mutate({ id: videoId })}>
                     <RefreshCcw className="size-4 mr-2" />
                     <span>Revalidate</span>
                   </DropdownMenuItem>
@@ -346,12 +333,8 @@ export const FormSectionSuspense = ({ videoId }: Props) => {
                         variant="outline"
                         type="button"
                         className="rounded-full size-6 [&_svg]:size-3"
-                        onClick={() =>
-                          generateDescription.mutate({ id: videoId })
-                        }
-                        disabled={
-                          generateDescription.isPending || !video.muxTrackId
-                        }
+                        onClick={() => generateDescription.mutate({ id: videoId })}
+                        disabled={generateDescription.isPending || !video.muxTrackId}
                       >
                         {generateDescription.isPending ? (
                           <Loader2 className="animate-spin" />
@@ -403,9 +386,7 @@ export const FormSectionSuspense = ({ videoId }: Props) => {
                           align="start"
                           side="right"
                         >
-                          <DropdownMenuItem
-                            onClick={() => setThumbnailModalopen(true)}
-                          >
+                          <DropdownMenuItem onClick={() => setThumbnailModalopen(true)}>
                             <ImagePlus className="size-4 mr-1" />
                             <span>Change</span>
                           </DropdownMenuItem>
@@ -418,9 +399,7 @@ export const FormSectionSuspense = ({ videoId }: Props) => {
                           </DropdownMenuItem>
 
                           <DropdownMenuItem
-                            onClick={() =>
-                              restoreThumbnail.mutate({ id: videoId })
-                            }
+                            onClick={() => restoreThumbnail.mutate({ id: videoId })}
                           >
                             <RotateCcw className="size-4 mr-1" />
                             <span>Restore</span>
@@ -482,15 +461,14 @@ export const FormSectionSuspense = ({ videoId }: Props) => {
                 <div className="p-4 flex flex-col gap-y-6">
                   <div className="flex justify-between items-center gap-x-2">
                     <div className="flex flex-col gap-y-1">
-                      <p className="text-muted-foreground text-xs">
-                        Video Link
-                      </p>
+                      <p className="text-muted-foreground text-xs">Video Link</p>
 
                       <div className="flex items-center gap-x-2">
-                        <Link href={`/videos/${video.id}`}>
-                          <p className="line-clamp-1 text-sm text-blue-500">
-                            {fullUrl}
-                          </p>
+                        <Link
+                          prefetch
+                          href={`/videos/${video.id}`}
+                        >
+                          <p className="line-clamp-1 text-sm text-blue-500">{fullUrl}</p>
                         </Link>
 
                         <Button
@@ -513,9 +491,7 @@ export const FormSectionSuspense = ({ videoId }: Props) => {
 
                   <div className="flex justify-between items-center">
                     <div className="flex flex-col gap-y-1">
-                      <p className="text-muted-foreground text-xs">
-                        Video status
-                      </p>
+                      <p className="text-muted-foreground text-xs">Video status</p>
 
                       <p className="text-sm">
                         {snakeCaseToTitle(video.muxStatus || "Preparing")}
@@ -525,14 +501,10 @@ export const FormSectionSuspense = ({ videoId }: Props) => {
 
                   <div className="flex justify-between items-center">
                     <div className="flex flex-col gap-y-1">
-                      <p className="text-muted-foreground text-xs">
-                        Subtitles status
-                      </p>
+                      <p className="text-muted-foreground text-xs">Subtitles status</p>
 
                       <p className="text-sm">
-                        {snakeCaseToTitle(
-                          video.muxTrackStatus || "no_subtitles"
-                        )}
+                        {snakeCaseToTitle(video.muxTrackStatus || "no_subtitles")}
                       </p>
                     </div>
                   </div>

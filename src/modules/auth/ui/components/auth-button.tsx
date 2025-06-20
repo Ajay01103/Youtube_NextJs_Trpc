@@ -3,13 +3,7 @@
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Clapperboard, User, UserCircle } from "lucide-react"
 
-import {
-  UserButton,
-  SignInButton,
-  SignIn,
-  SignedOut,
-  SignedIn,
-} from "@clerk/nextjs"
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 

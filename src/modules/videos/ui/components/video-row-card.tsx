@@ -4,11 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 import { Skeleton } from "@/components/ui/skeleton"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { UserInfo } from "@/modules/users/ui/components/user-info"
 import { UserAvatar } from "@/components/user-avatar"
 import { VideoMenu } from "./video-menu"
@@ -80,11 +76,7 @@ export const VideoRowCardSkeleton = ({
   )
 }
 
-export const VideoRowCard = ({
-  data,
-  size = "default",
-  onRemove,
-}: VideoRowCardProps) => {
+export const VideoRowCard = ({ data, size = "default", onRemove }: VideoRowCardProps) => {
   const compactViews = useMemo(() => {
     return Intl.NumberFormat("en", {
       notation: "compact",
@@ -100,6 +92,7 @@ export const VideoRowCard = ({
   return (
     <div className={videoRowCardVariants({ size })}>
       <Link
+        prefetch
         href={`/videos/${data.id}`}
         className={thumbnailVariants({ size })}
       >
@@ -115,6 +108,7 @@ export const VideoRowCard = ({
       <div className="flex-1 min-w-0">
         <div className="flex justify-between gap-x-2">
           <Link
+            prefetch
             href={`/videos/${data.id}`}
             className="flex-1 min-w-0"
           >

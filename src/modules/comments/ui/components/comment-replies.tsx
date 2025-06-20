@@ -10,7 +10,7 @@ interface CommentRepliesProps {
 }
 
 export const CommentReplies = ({ parentId, videoId }: CommentRepliesProps) => {
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, isLoading, fetchNextPage, hasNextPage } =
     trpc.comments.getMany.useInfiniteQuery(
       {
         limit: DEFAULT_LIMIT,

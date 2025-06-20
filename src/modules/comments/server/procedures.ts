@@ -154,7 +154,7 @@ export const commentsRouter = createTRPCRouter({
         .limit(limit + 1)
 
       // Get viewer reactions if user is logged in
-      let viewerReactionsMap = new Map()
+      const viewerReactionsMap = new Map()
       if (userId) {
         const viewerReactions = await db
           .select({

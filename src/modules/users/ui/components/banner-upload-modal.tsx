@@ -3,29 +3,27 @@ import { UploadDropzone } from "@/lib/uploadthing"
 import { trpc } from "@/trpc/client"
 
 interface Props {
-  videoId: string
+  userId: string
   open: boolean
-  onOpenChange: (open: boolean) => void
+  onOpenChnage: (open: boolean) => void
 }
 
-export const ThumbnailUploadModal = ({ onOpenChange, open, videoId }: Props) => {
+export const BannerUploadModal = ({ onOpenChnage, open, userId }: Props) => {
   const utils = trpc.useUtils()
 
   const onUploadComplete = () => {
-    utils.studio.getMany.invalidate()
-    utils.studio.getOne.invalidate({ id: videoId })
-    onOpenChange(false)
+    utils.users.getOne.invalidate({id: userId})
+    onOpenChnage(false)
   }
 
   return (
     <ResponsiveModal
-      title="Upload a thumbnail"
+      title="Upload a banner"
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={onOpenChnage}
     >
       <UploadDropzone
-        endpoint="thumbnailUploader"
-        input={{ videoId }}
+        endpoint="bannerUploader"
         onClientUploadComplete={onUploadComplete}
       />
     </ResponsiveModal>

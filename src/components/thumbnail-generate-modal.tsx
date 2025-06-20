@@ -1,8 +1,9 @@
-import { z } from "zod"
-import { trpc } from "@/trpc/client"
-import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
+import { ResponsiveModal } from "@/components/responsive-dialog"
+import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -11,10 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { ResponsiveModal } from "@/components/responsive-dialog"
-import { toast } from "sonner"
 
 const formSchema = z.object({
   prompt: z.string().min(10),
@@ -51,6 +49,7 @@ export const ThumbnailGenerateModal = ({
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     // generateThumbnail.mutate({ prompt: values.prompt, id: videoId })
+    console.log(values)
   }
 
   return (

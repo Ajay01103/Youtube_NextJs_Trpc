@@ -32,7 +32,10 @@ export const StudioSidebarHeader = () => {
           tooltip={"Your profile"}
           asChild
         >
-          <Link href={"/users/current"}>
+          <Link
+            prefetch
+            href={"/users/current"}
+          >
             <UserAvatar
               avatarUrl={user.imageUrl}
               name={user?.emailAddresses[0]?.emailAddress?.split("@")[0]}
@@ -46,7 +49,10 @@ export const StudioSidebarHeader = () => {
 
   return (
     <SidebarHeader className="flex items-center justify-center pb-4">
-      <Link href="/users/current">
+      <Link
+        prefetch
+        href="/users/current"
+      >
         <UserAvatar
           avatarUrl={user?.imageUrl}
           name={user?.emailAddresses[0]?.emailAddress?.split("@")[0]}
