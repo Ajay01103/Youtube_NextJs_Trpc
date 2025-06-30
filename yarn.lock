@@ -1909,21 +1909,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.66.0":
-  version: 5.66.0
-  resolution: "@tanstack/query-core@npm:5.66.0"
-  checksum: 10/ba8623c0272e36d3ce616afa024d43e07e6b69170219b32eb4f60156fee9ac4ffa74d2fbb999739b6dea757b75966e76129271f4224f06c59deee24a72944da4
+"@tanstack/query-core@npm:5.81.5":
+  version: 5.81.5
+  resolution: "@tanstack/query-core@npm:5.81.5"
+  checksum: 10/a324ab3380c1c282b95520de8b74af537cfe6b44ae06b6639b3e7a70757c81c2db03f765c27aa770d6c44ef8e1f7cbba243863021ded53fff965a522d1e5f698
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:^5.66.0":
-  version: 5.66.0
-  resolution: "@tanstack/react-query@npm:5.66.0"
+"@tanstack/react-query@npm:^5.81.5":
+  version: 5.81.5
+  resolution: "@tanstack/react-query@npm:5.81.5"
   dependencies:
-    "@tanstack/query-core": "npm:5.66.0"
+    "@tanstack/query-core": "npm:5.81.5"
   peerDependencies:
     react: ^18 || ^19
-  checksum: 10/482decc02664e756c66c9ff46279b5eb3f0fb29fcdcb51b96319e8487a2b2e8b151319d6a5d9ef1180523a1792d6449cec2e9bfa87f37a4f755fc9d95534585d
+  checksum: 10/35c75cf902938a76d468c0e1f08d738afc989ddc3728c4d2c00b16975870500da98aea21c1a682726abb3ef5f6348cb739335e3b940224ccc527b27dddc20fd4
   languageName: node
   linkType: hard
 
@@ -1946,36 +1946,36 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@trpc/client@npm:^11.0.0-rc.750":
-  version: 11.0.0-rc.750
-  resolution: "@trpc/client@npm:11.0.0-rc.750"
+"@trpc/client@npm:^11.4.3":
+  version: 11.4.3
+  resolution: "@trpc/client@npm:11.4.3"
   peerDependencies:
-    "@trpc/server": 11.0.0-rc.750+3ade8efd4
+    "@trpc/server": 11.4.3
     typescript: ">=5.7.2"
-  checksum: 10/f408c8e6f8831f6a50044d21d5b71cb9056a036c220de21ae3daab7a9cb1f33c5a38d0e4c3af16fcfe2ac47e7f8a9cec75fcdcbe3ed656fb7cfea75628c36188
+  checksum: 10/c0669432e7d034ee30c16066b1c8e19b21eca5a2a35ca6f31239e7023751bdf7d8840a81466aebfcd2b5f61b8ec030fbf3523dfbaacb7390f6603857b17bf5e5
   languageName: node
   linkType: hard
 
-"@trpc/react-query@npm:^11.0.0-rc.750":
-  version: 11.0.0-rc.750
-  resolution: "@trpc/react-query@npm:11.0.0-rc.750"
+"@trpc/react-query@npm:^11.4.3":
+  version: 11.4.3
+  resolution: "@trpc/react-query@npm:11.4.3"
   peerDependencies:
-    "@tanstack/react-query": ^5.62.8
-    "@trpc/client": 11.0.0-rc.750+3ade8efd4
-    "@trpc/server": 11.0.0-rc.750+3ade8efd4
+    "@tanstack/react-query": ^5.80.3
+    "@trpc/client": 11.4.3
+    "@trpc/server": 11.4.3
     react: ">=18.2.0"
     react-dom: ">=18.2.0"
     typescript: ">=5.7.2"
-  checksum: 10/e634c3953e137bbb7fe30ab5701779d0111e870cb080e32e5679dbefc7af1a9620bf71a51e521f96a17f20d4ef20ff8517482299eec80db28c8bd86ddc9de530
+  checksum: 10/da6f448dd20796aca2b377116e8c19c71f2e98e57c1b9064a9137fea8a8ce8d7165f71890b2c32bd1d8956859732c1cca338abad791187e81c90e879e04646d0
   languageName: node
   linkType: hard
 
-"@trpc/server@npm:^11.0.0-rc.750":
-  version: 11.0.0-rc.750
-  resolution: "@trpc/server@npm:11.0.0-rc.750"
+"@trpc/server@npm:^11.4.3":
+  version: 11.4.3
+  resolution: "@trpc/server@npm:11.4.3"
   peerDependencies:
     typescript: ">=5.7.2"
-  checksum: 10/b2faefd4a105788014a6881befc119b16b2b2b838e749552c69b739ef52c9bb43c2e6a457444cf1e054715c28365e1c3a545e7134d6a5e9729338689340fc65b
+  checksum: 10/0f1438624f6ded77b51dc1139a90d64a301428150acef9ed6a3eb8f0569485723e29ac1079fd4cc06f926c840f985dc1689f88167cf8f0d77ff691ad54d69c42
   languageName: node
   linkType: hard
 
@@ -7541,11 +7541,11 @@ __metadata:
     "@radix-ui/react-separator": "npm:^1.1.2"
     "@radix-ui/react-slot": "npm:^1.1.2"
     "@radix-ui/react-tooltip": "npm:^1.1.8"
-    "@tanstack/react-query": "npm:^5.66.0"
+    "@tanstack/react-query": "npm:^5.81.5"
     "@tanstack/react-table": "npm:^8.21.2"
-    "@trpc/client": "npm:^11.0.0-rc.750"
-    "@trpc/react-query": "npm:^11.0.0-rc.750"
-    "@trpc/server": "npm:^11.0.0-rc.750"
+    "@trpc/client": "npm:^11.4.3"
+    "@trpc/react-query": "npm:^11.4.3"
+    "@trpc/server": "npm:^11.4.3"
     "@types/node": "npm:^24.0.3"
     "@types/react": "npm:^19.1.8"
     "@types/react-dom": "npm:^19.1.6"
