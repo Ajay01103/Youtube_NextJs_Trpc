@@ -10,11 +10,11 @@ import superjson from "superjson"
 // Dont do any db call in this TRPCcontext this will make whole
 // application very slow
 
-export const createTRPCContext = async () => {
+export const createTRPCContext = cache(async () => {
   const { userId } = await auth()
 
   return { clerkUserId: userId }
-}
+})
 
 export type Context = Awaited<ReturnType<typeof createTRPCContext>>
 
